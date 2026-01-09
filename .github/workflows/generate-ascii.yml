@@ -2,12 +2,33 @@ name: Generate ASCII Artwork
 on: 
   push
 jobs: 
-    ascii_job:
+    build_job_1:
         runs-on: ubuntu-latest
         steps:
         - name: Checkout Repo
           uses: actions/checkout@v4  
-        - name: Executing Shell Script
-          run: | 
-           chmod +x ascii-script1.sh
-           ./ascii-script1.sh
+        - name: Install Cowsay
+          run : sudo apt-get install cowsay -y  
+        - name: Execute Cowsay CMD
+          run : cowsay -f dragon "Run for cover, I am a DRAGON....RAWR" >> dragon.txt
+        - name: Sleep for 30 seconds
+          run : sleep 30
+
+    test_job_1:
+        needs: build_job_1
+        runs-on: ubuntu-latest
+        steps:
+        - name: Sleep for 10 seconds
+          run : sleep 10
+        - name: Test File Exists
+          run : grep -i "dragon" dragon.txt
+    
+    deploy_job_1:
+        needs: test_job_1
+        runs-on: ubuntu-latest
+        steps:
+        - name: Sleep for 10 seconds
+          run : sleep 10
+        - name: Read the File
+          run : cat dragon.txt
+
